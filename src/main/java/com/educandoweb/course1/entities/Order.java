@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.educandoweb.course1.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_order")
@@ -41,6 +42,7 @@ public class Order implements Serializable{
 	@JoinColumn(name = "client_id")
 	private User client;
 	
+	@JsonIgnore
 	public Payment getPayment() {
 		return payment;
 	}
@@ -95,6 +97,14 @@ public class Order implements Serializable{
 		this.client = client;
 	}
 
+	public Double getTotal() {
+		double sum = 0.0;
+		for (OrderItem x : items) {
+			sum += x.getSubTotal();
+		}
+		return sum;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
